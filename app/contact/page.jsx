@@ -6,11 +6,43 @@ import { ArrowRight, Building, Check, Mail, Phone } from 'lucide-react';
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [form, setForm] = useState({ name: '', email: '', company: '', properties: '', agents: '', message: '' });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    setErrorMsg('');
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/boomboom@thesalesgauntlet.co', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          _subject: `New Sales Gauntlet inquiry from ${form.name}`,
+          _template: 'table',
+          _captcha: 'false',
+          name: form.name,
+          email: form.email,
+          company: form.company,
+          properties: form.properties,
+          agents: form.agents,
+          message: form.message,
+        }),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        setErrorMsg('Something went wrong. Please email boomboom@thesalesgauntlet.co directly.');
+      }
+    } catch {
+      setErrorMsg('Network error. Please email boomboom@thesalesgauntlet.co directly.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const update = (field) => (e) => setForm({ ...form, [field]: e.target.value });
@@ -83,9 +115,14 @@ export default function ContactPage() {
                     />
                   </div>
 
-                  <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                    Send Message <ArrowRight size={16} />
+                  <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} disabled={submitting}>
+                    {submitting ? 'Sending...' : <>Send Message <ArrowRight size={16} /></>}
                   </button>
+                  {errorMsg && (
+                    <div style={{ marginTop: 12, padding: '10px 14px', background: 'rgba(196, 69, 54, 0.1)', borderLeft: '2px solid #c44536', color: '#f5f1e8', fontSize: 13 }}>
+                      {errorMsg}
+                    </div>
+                  )}
                 </form>
               )}
             </div>
