@@ -30,12 +30,21 @@ export const metadata = {
     title: 'The Sales Gauntlet | Real Leasing Training Under Real Pressure',
     description:
       'Nine training operations. Real timer pressure. Fair housing compliance built in. The only leasing training with a live countdown timer and real prospect hangups.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'The Sales Gauntlet — Real Leasing Training Under Real Pressure',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'The Sales Gauntlet',
     description:
       'Real leasing training under real pressure. Nine operations. Timer-based scenarios. Fair housing baked in.',
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,
